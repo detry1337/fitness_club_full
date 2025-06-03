@@ -1,0 +1,32 @@
+{% extends 'club/base.html' %}
+{% load static %}
+
+{% block title %}Наши услуги{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4">Наши услуги</h1>
+    <p class="lead">Все для вашего здоровья и комфорта</p>
+</div>
+
+<div class="row">
+    {% for service in services %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <img src="{% static 'club/images/service'|add:forloop.counter|add:'.jpg' %}" class="card-img-top" alt="{{ service.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ service.get_name_display }}</h5>
+                <p class="card-text">{{ service.description }}</p>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-currency-dollar"></i> Цена: {{ service.price }}₽</li>
+                    <li><i class="bi bi-check-circle"></i> Доступно: {% if service.available %}Да{% else %}Нет{% endif %}</li>
+                </ul>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{% url 'service_detail' service.id %}" class="btn btn-primary">Подробнее и запись</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'club/base.html' %}
+{% load static %}
+
+{% block title %}Абонементы{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4">Наши абонементы</h1>
+    <p class="lead">Выберите подходящий вариант для себя</p>
+</div>
+
+<div class="row">
+    {% for membership in memberships %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 {% if membership.name == 'PREMIUM' %}border-primary{% elif membership.name == 'VIP' %}border-warning{% endif %}">
+            <div class="card-header {% if membership.name == 'PREMIUM' %}bg-primary text-white{% elif membership.name == 'VIP' %}bg-warning{% endif %}">
+                <h4 class="my-0 fw-normal text-center">{{ membership.get_name_display }}</h4>
+            </div>
+            <div class="card-body">
+                <h1 class="card-title pricing-card-title text-center">{{ membership.price }}₽</h1>
+                <p class="text-muted text-center">за {{ membership.duration_days }} дней</p>
+                <ul class="list-unstyled mt-3 mb-4">
+                    {% if membership.name == 'BASIC' %}
+                        <li><i class="bi bi-check me-2"></i> Доступ в тренажерный зал</li>
+                        <li><i class="bi bi-check me-2"></i> 2 групповых занятия в неделю</li>
+                        <li><i class="bi bi-x me-2 text-muted"></i> Персональные тренировки</li>
+                        <li><i class="bi bi-x me-2 text-muted"></i> Доступ в SPA-зону</li>
+                    {% elif membership.name == 'PREMIUM' %}
+                        <li><i class="bi bi-check me-2"></i> Неограниченный доступ в зал</li>
+                        <li><i class="bi bi-check me-2"></i> Все групповые занятия</li>
+                        <li><i class="bi bi-check me-2"></i> 2 персональные тренировки</li>
+                        <li><i class="bi bi-check me-2"></i> Доступ в SPA 2 раза в неделю</li>
+                    {% elif membership.name == 'VIP' %}
+                        <li><i class="bi bi-check me-2"></i> Все услуги клуба</li>
+                        <li><i class="bi bi-check me-2"></i> 8 персональных тренировок</li>
+                        <li><i class="bi bi-check me-2"></i> Неограниченный SPA</li>
+                        <li><i class="bi bi-check me-2"></i> Персональный шкафчик</li>
+                        <li><i class="bi bi-check me-2"></i> Гостевые визиты</li>
+                    {% endif %}
+                </ul>
+                <p class="text-muted small">{{ membership.description }}</p>
+            </div>
+            <div class="card-footer bg-transparent">
+                {% if user.is_authenticated %}
+                    <form method="POST" action="{% url 'profile' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="membership" value="{{ membership.id }}">
+                        <button type="submit" class="btn btn-lg btn-outline-primary w-100">
+                            Выбрать
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-lg btn-outline-primary w-100">
+                        Зарегистрироваться
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="mt-5">
+    <h2>Частые вопросы</h2>
+    <div class="accordion mt-3" id="faqAccordion">
+        <div class="accordion-item">
+            <h3 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                    Можно ли заморозить абонемент?
+                </button>
+            </h3>
+            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Да, вы можете заморозить абонемент на срок до 14 дней один раз в течение действия абонемента. Для этого обратитесь к администратору.
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h3 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                    Есть ли пробные занятия?
+                </button>
+            </h3>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Да, мы предлагаем одно бесплатное пробное занятие для новых клиентов. Запишитесь на него через сайт или по телефону.
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h3 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                    Можно ли продлить абонемент?
+                </button>
+            </h3>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Да, абонемент можно продлить до истечения его срока действия со скидкой 10%. После истечения срока продление возможно по полной стоимости.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

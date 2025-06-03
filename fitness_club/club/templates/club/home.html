@@ -1,0 +1,46 @@
+{% extends 'club/base.html' %}
+{% load static %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="hero-section mb-5">
+    <div class="container text-center text-white py-5">
+        <h1 class="display-4">Добро пожаловать в наш фитнес-клуб</h1>
+        <p class="lead">Достигайте своих целей вместе с нами</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Присоединиться</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <img src="{% static 'club/images/cardio.jpg' %}" class="card-img-top" alt="Кардио">
+            <div class="card-body">
+                <h5 class="card-title">Кардио тренировки</h5>
+                <p class="card-text">Современное оборудование для эффективных кардио тренировок.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <img src="{% static 'club/images/strength.jpg' %}" class="card-img-top" alt="Силовые">
+            <div class="card-body">
+                <h5 class="card-title">Силовые тренировки</h5>
+                <p class="card-text">Полный спектр силового оборудования для всех групп мышц.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <img src="{% static 'club/images/yoga.jpg' %}" class="card-img-top" alt="Йога">
+            <div class="card-body">
+                <h5 class="card-title">Групповые занятия</h5>
+                <p class="card-text">Йога, пилатес, функциональный тренинг и многое другое.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

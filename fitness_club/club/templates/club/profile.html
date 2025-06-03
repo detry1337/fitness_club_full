@@ -1,0 +1,82 @@
+{% extends 'club/base.html' %}
+{% load static %}  <!-- Добавьте эту строку в начало шаблона -->
+{% load crispy_forms_tags %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                {% if member.photo %}
+                    <img src="{{ member.photo.url }}" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'club/images/default-profile.png' %}" class="rounded-circle img-fluid" style="width: 150px;">
+                {% endif %}
+                <h5 class="my-3">{{ user.get_full_name }}</h5>
+                <p class="text-muted mb-1">Участник с {{ member.join_date|date:"d.m.Y" }}</p>
+                {% if member.membership %}
+                    <p class="text-muted mb-4">{{ member.membership.get_name_display }} абонемент</p>
+                {% else %}
+                    <p class="text-muted mb-4">Нет активного абонемента</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Информация о профиле</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary">Обновить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h4>Мои записи</h4>
+    </div>
+    <div class="card-body">
+        {% if bookings %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Услуга</th>
+                            <th>Дата</th>
+                            <th>Время</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.service.get_name_display }}</td>
+                            <td>{{ booking.date|date:"d.m.Y" }}</td>
+                            <td>{{ booking.time|time:"H:i" }}</td>
+                            <td>
+                                {% if booking.date >= now.date %}
+                                    <span class="badge bg-success">Активна</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Завершена</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>У вас нет активных записей</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
